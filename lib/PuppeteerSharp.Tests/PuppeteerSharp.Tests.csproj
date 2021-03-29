@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFrameworks>net48;netcoreapp2.2</TargetFrameworks>
+		<TargetFrameworks>net48;netcoreapp2.2;net5.0</TargetFrameworks>
 		<IsTestProject>true</IsTestProject>
 	</PropertyGroup>
 	<ItemGroup>
@@ -15,17 +15,11 @@
 		<PackageReference Include="Microsoft.AspNetCore.Connections.Abstractions" Version="2.2.0" />
 		<PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="6.0.0-preview.2.21154.6" />
 	</ItemGroup>
-	<ItemGroup Condition="'$(TargetFramework)'=='net471'">
-		<PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0" PrivateAssets="All" />
-	</ItemGroup>
 	<Import Project="../Common/SignAssembly.props" />
 	<ItemGroup>
 		<Folder Include="Issues\" />
 		<Folder Include="Attributes\" />
 	</ItemGroup>
-	<PropertyGroup Condition="'$(TargetFramework)'=='net471'">
-		<RuntimeIdentifier>win10-x64</RuntimeIdentifier>
-	</PropertyGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\PuppeteerSharp.TestServer\PuppeteerSharp.TestServer.csproj" />
 		<ProjectReference Include="..\PuppeteerSharp\PuppeteerSharp.csproj" />

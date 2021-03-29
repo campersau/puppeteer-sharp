@@ -13,6 +13,10 @@ environment:
       PRODUCT: CHROMIUM
     - framework: netcoreapp2.2
       PRODUCT: FIREFOX
+    - framework: net5.0
+      PRODUCT: CHROMIUM
+    - framework: net5.0
+      PRODUCT: FIREFOX
 
 before_build:
 - sh: >-

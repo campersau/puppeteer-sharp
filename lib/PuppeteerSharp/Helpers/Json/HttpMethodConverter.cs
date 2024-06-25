@@ -1,20 +1,16 @@
 using System;
 using System.Net.Http;
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace PuppeteerSharp.Helpers.Json
 {
-    internal class HttpMethodConverter : JsonConverter
+    internal class HttpMethodConverter : JsonConverter<HttpMethod>
     {
-        public override bool CanConvert(Type objectType) => objectType == typeof(string);
+        public override HttpMethod Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+            => new(reader.GetString());
 
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
-            => new HttpMethod((string)reader.Value);
-
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
-        {
-            var httpMethod = (HttpMethod)value;
-            serializer.Serialize(writer, httpMethod.Method);
-        }
+        public override void Write(Utf8JsonWriter writer, HttpMethod value, JsonSerializerOptions options)
+            => writer.WriteStringValue(value.Method);
     }
 }

@@ -1,10 +1,9 @@
-using System.Runtime.Serialization;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using PuppeteerSharp.Helpers.Json;
 
 namespace PuppeteerSharp
 {
-    [JsonConverter(typeof(FlexibleStringEnumConverter), Other)]
+    [JsonConverter(typeof(JsonStringCamelCaseEnumConverter))]
     internal enum DOMWorldType
     {
         /// <summary>
@@ -15,13 +14,11 @@ namespace PuppeteerSharp
         /// <summary>
         /// Isolated type.
         /// </summary>
-        [EnumMember(Value = "isolated")]
         Isolated,
 
         /// <summary>
         /// Default type.
         /// </summary>
-        [EnumMember(Value = "default")]
         Default,
     }
 }

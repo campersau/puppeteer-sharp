@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using PuppeteerSharp.Nunit;
 
@@ -15,7 +14,7 @@ namespace PuppeteerSharp.Tests.NetworkTests
         public async Task ShouldWork()
         {
             var response = await Page.GoToAsync(TestConstants.ServerUrl + "/simple.json");
-            Assert.AreEqual(JObject.Parse("{foo: 'bar'}"), await response.JsonAsync());
+            Assert.AreEqual("""{"foo":"bar"}""", (await response.JsonAsync()).ToString());
         }
     }
 }

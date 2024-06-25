@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Concurrent;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using PuppeteerSharp.Cdp.Messaging;
 using PuppeteerSharp.Helpers.Json;
 
@@ -75,7 +74,7 @@ namespace PuppeteerSharp
             {
                 return arg == null
                     ? "undefined"
-                    : JsonConvert.SerializeObject(arg, JsonHelper.DefaultJsonSerializerSettings);
+                    : JsonSerializer.Serialize(arg, JsonHelper.DefaultJsonSerializerOptions);
             }
         }
 
@@ -84,7 +83,7 @@ namespace PuppeteerSharp
             var binding = pageBindings[e.BindingPayload.Name];
             var methodParams = binding.Function.Method.GetParameters().Select(parameter => parameter.ParameterType).ToArray();
 
-            var args = e.BindingPayload.Args.Select((token, i) => token.ToObject(methodParams[i])).Cast<object>().ToArray();
+            var args = e.BindingPayload.Args.Select((jsonElement, i) => jsonElement.Deserialize(methodParams[i])).Cast<object>().ToArray();
 
             await binding.RunAsync(context, e.BindingPayload.Seq, args, e.BindingPayload.IsTrivial).ConfigureAwait(false);
         }
@@ -95,7 +94,7 @@ namespace PuppeteerSharp
             object result;
             var methodParams = binding.Method.GetParameters().Select(parameter => parameter.ParameterType).ToArray();
 
-            var args = rawArgs.Select((arg, i) => arg is JToken token ? token.ToObject(methodParams[i]) : arg).ToArray();
+            var args = rawArgs.Select((arg, i) => arg is JsonElement jsonElement ? jsonElement.Deserialize(methodParams[i]) : arg).ToArray();
 
             result = binding.DynamicInvoke(args);
             if (result is Task taskResult)

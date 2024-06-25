@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using NUnit.Framework;
@@ -272,17 +271,14 @@ namespace PuppeteerSharp.Tests.KeyboardTests
             {
                 window.result = null;
                 document.addEventListener('keydown', event => {
-                    window.result = [event.key, event.code, event.metaKey];
+                    window.result = {key: event.key, code: event.code, metaKey: event.metaKey};
                 });
             }");
             await Page.Keyboard.PressAsync("Meta");
-            const int key = 0;
-            const int code = 1;
-            const int metaKey = 2;
-            var result = await Page.EvaluateExpressionAsync<object[]>("result");
-            Assert.AreEqual("Meta", result[key]);
-            Assert.AreEqual("MetaLeft", result[code]);
-            Assert.AreEqual(true, result[metaKey]);
+            var result = await Page.EvaluateExpressionAsync("result");
+            Assert.AreEqual("Meta", result.GetProperty("key").GetString());
+            Assert.AreEqual("MetaLeft", result.GetProperty("code").GetString());
+            Assert.AreEqual(true, result.GetProperty("metaKey").GetBoolean());
         }
     }
 }

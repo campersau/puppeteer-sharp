@@ -67,14 +67,14 @@ namespace PuppeteerSharp.Cdp
                 switch (e.MessageID)
                 {
                     case "Target.attachedToTarget":
-                        OnAttachedToTarget(sender, e.MessageData.ToObject<TargetAttachedToTargetResponse>(true));
+                        OnAttachedToTarget(sender, e.MessageData.Deserialize<TargetAttachedToTargetResponse>(JsonHelper.DefaultJsonSerializerOptions));
                         return;
                     case "Target.targetCreated":
-                        OnTargetCreated(e.MessageData.ToObject<TargetCreatedResponse>(true));
+                        OnTargetCreated(e.MessageData.Deserialize<TargetCreatedResponse>(JsonHelper.DefaultJsonSerializerOptions));
                         return;
 
                     case "Target.targetDestroyed":
-                        OnTargetDestroyed(e.MessageData.ToObject<TargetDestroyedResponse>(true));
+                        OnTargetDestroyed(e.MessageData.Deserialize<TargetDestroyedResponse>(JsonHelper.DefaultJsonSerializerOptions));
                         return;
                 }
             }

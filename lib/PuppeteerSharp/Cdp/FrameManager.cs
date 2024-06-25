@@ -207,42 +207,42 @@ namespace PuppeteerSharp.Cdp
                     switch (e.MessageID)
                     {
                         case "Page.frameAttached":
-                            OnFrameAttached(sender as CDPSession, e.MessageData.ToObject<PageFrameAttachedResponse>());
+                            OnFrameAttached(sender as CDPSession, e.MessageData.Deserialize<PageFrameAttachedResponse>(JsonHelper.DefaultJsonSerializerOptions));
                             break;
 
                         case "Page.frameNavigated":
-                            var response = e.MessageData.ToObject<PageFrameNavigatedResponse>(true);
+                            var response = e.MessageData.Deserialize<PageFrameNavigatedResponse>(JsonHelper.DefaultJsonSerializerOptions);
                             await OnFrameNavigatedAsync(response.Frame, response.Type).ConfigureAwait(false);
                             break;
 
                         case "Page.navigatedWithinDocument":
-                            OnFrameNavigatedWithinDocument(e.MessageData.ToObject<NavigatedWithinDocumentResponse>(true));
+                            OnFrameNavigatedWithinDocument(e.MessageData.Deserialize<NavigatedWithinDocumentResponse>(JsonHelper.DefaultJsonSerializerOptions));
                             break;
 
                         case "Page.frameDetached":
-                            OnFrameDetached(e.MessageData.ToObject<PageFrameDetachedResponse>(true));
+                            OnFrameDetached(e.MessageData.Deserialize<PageFrameDetachedResponse>(JsonHelper.DefaultJsonSerializerOptions));
                             break;
 
                         case "Page.frameStartedLoading":
-                            OnFrameStartedLoading(e.MessageData.ToObject<BasicFrameResponse>(true));
+                            OnFrameStartedLoading(e.MessageData.Deserialize<BasicFrameResponse>(JsonHelper.DefaultJsonSerializerOptions));
                             break;
 
                         case "Page.frameStoppedLoading":
-                            OnFrameStoppedLoading(e.MessageData.ToObject<BasicFrameResponse>(true));
+                            OnFrameStoppedLoading(e.MessageData.Deserialize<BasicFrameResponse>(JsonHelper.DefaultJsonSerializerOptions));
                             break;
 
                         case "Runtime.executionContextCreated":
-                            await OnExecutionContextCreatedAsync(e.MessageData.ToObject<RuntimeExecutionContextCreatedResponse>(true).Context, sender as CDPSession).ConfigureAwait(false);
+                            await OnExecutionContextCreatedAsync(e.MessageData.Deserialize<RuntimeExecutionContextCreatedResponse>(JsonHelper.DefaultJsonSerializerOptions).Context, sender as CDPSession).ConfigureAwait(false);
                             break;
 
                         case "Runtime.executionContextDestroyed":
-                            OnExecutionContextDestroyed(e.MessageData.ToObject<RuntimeExecutionContextDestroyedResponse>(true).ExecutionContextId, sender as CDPSession);
+                            OnExecutionContextDestroyed(e.MessageData.Deserialize<RuntimeExecutionContextDestroyedResponse>(JsonHelper.DefaultJsonSerializerOptions).ExecutionContextId, sender as CDPSession);
                             break;
                         case "Runtime.executionContextsCleared":
                             OnExecutionContextsCleared(sender as CDPSession);
                             break;
                         case "Page.lifecycleEvent":
-                            OnLifeCycleEvent(e.MessageData.ToObject<LifecycleEventResponse>(true));
+                            OnLifeCycleEvent(e.MessageData.Deserialize<LifecycleEventResponse>(JsonHelper.DefaultJsonSerializerOptions));
                             break;
                     }
                 }

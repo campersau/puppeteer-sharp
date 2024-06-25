@@ -1,6 +1,5 @@
 using System;
 using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using PuppeteerSharp.Nunit;
 
@@ -17,7 +16,7 @@ namespace PuppeteerSharp.Tests.JSHandleTests
         {
             var aHandle = await Page.EvaluateExpressionHandleAsync("({ foo: 'bar'})");
             var json = await aHandle.JsonValueAsync();
-            Assert.AreEqual(JObject.Parse("{ foo: 'bar' }"), json);
+            Assert.AreEqual("""{"foo":"bar"}""", json.ToString());
         }
 
         [Test, Retry(2),

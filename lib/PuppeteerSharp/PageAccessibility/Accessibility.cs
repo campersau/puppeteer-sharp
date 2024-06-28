@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using PuppeteerSharp.Cdp.Messaging;
+using PuppeteerSharp.Helpers.Json;
 
 namespace PuppeteerSharp.PageAccessibility
 {
@@ -24,14 +25,14 @@ namespace PuppeteerSharp.PageAccessibility
                 {
                     ObjectId = options.Root.RemoteObject.ObjectId,
                 }).ConfigureAwait(false);
-                backendNodeId = node.Node.BackendNodeId;
+                backendNodeId = JsonHelper.UnwrapJsonElement(node.Node.BackendNodeId);
             }
 
             var defaultRoot = AXNode.CreateTree(nodes);
             var needle = defaultRoot;
             if (backendNodeId != null)
             {
-                needle = defaultRoot.Find(node => node.Payload.BackendDOMNodeId.Equals(backendNodeId));
+                needle = defaultRoot.Find(node => backendNodeId.Equals(JsonHelper.UnwrapJsonElement(node.Payload.BackendDOMNodeId)));
                 if (needle == null)
                 {
                     return null;

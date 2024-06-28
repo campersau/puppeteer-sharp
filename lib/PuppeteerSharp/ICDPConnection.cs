@@ -1,6 +1,6 @@
 using System;
+using System.Text.Json;
 using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
 using PuppeteerSharp.Cdp;
 
 namespace PuppeteerSharp
@@ -27,7 +27,7 @@ namespace PuppeteerSharp
         /// <param name="options">The options.</param>
         /// <returns>The task.</returns>
         /// <exception cref="PuppeteerSharp.PuppeteerException">If the <see cref="Connection"/> is closed.</exception>
-        Task<JObject> SendAsync(string method, object args = null, bool waitForCallback = true, CommandOptions options = null);
+        Task<JsonElement> SendAsync(string method, object args = null, bool waitForCallback = true, CommandOptions options = null);
 
         /// <summary>
         /// Protocol methods can be called with this method.

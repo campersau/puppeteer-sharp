@@ -1,22 +1,19 @@
-using System.Runtime.Serialization;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+using System.Text.Json.Serialization;
+using PuppeteerSharp.Helpers.Json;
 
 namespace PuppeteerSharp.Input
 {
-    [JsonConverter(typeof(StringEnumConverter))]
+    [JsonConverter(typeof(JsonStringCamelCaseEnumConverter))]
     internal enum PointerType
     {
         /// <summary>
         /// Mouse.
         /// </summary>
-        [EnumMember(Value = "mouse")]
         Mouse,
 
         /// <summary>
         /// Pen.
         /// </summary>
-        [EnumMember(Value = "pen")]
         Pen,
     }
 }

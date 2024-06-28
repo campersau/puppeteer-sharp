@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
 using PuppeteerSharp.Cdp.Messaging;
 using PuppeteerSharp.Helpers;
 using PuppeteerSharp.Input;
@@ -199,7 +199,7 @@ namespace PuppeteerSharp
 
         /// <inheritdoc/>
         public Task FocusAsync() =>
-            BindIsolatedHandleAsync<JToken, ElementHandle>(handle => handle.EvaluateFunctionAsync("element => element.focus()"));
+            BindIsolatedHandleAsync<JsonElement, ElementHandle>(handle => handle.EvaluateFunctionAsync("element => element.focus()"));
 
         /// <inheritdoc/>
         public Task TypeAsync(string text, TypeOptions options = null)
@@ -669,7 +669,7 @@ namespace PuppeteerSharp
 
         /// <inheritdoc/>
         public virtual Task ScrollIntoViewAsync()
-            => BindIsolatedHandleAsync<JToken, ElementHandle>(handle
+            => BindIsolatedHandleAsync<JsonElement, ElementHandle>(handle
                 => handle.EvaluateFunctionAsync(
                         @"element => {
                             element.scrollIntoView({

@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using PuppeteerSharp.Cdp.Messaging;
@@ -167,28 +168,28 @@ namespace PuppeteerSharp.Cdp
                 switch (e.MessageID)
                 {
                     case "Fetch.requestPaused":
-                        await OnRequestPausedAsync(client, e.MessageData.ToObject<FetchRequestPausedResponse>(true)).ConfigureAwait(false);
+                        await OnRequestPausedAsync(client, e.MessageData.Deserialize<FetchRequestPausedResponse>(JsonHelper.DefaultJsonSerializerOptions)).ConfigureAwait(false);
                         break;
                     case "Fetch.authRequired":
-                        await OnAuthRequiredAsync(client, e.MessageData.ToObject<FetchAuthRequiredResponse>(true)).ConfigureAwait(false);
+                        await OnAuthRequiredAsync(client, e.MessageData.Deserialize<FetchAuthRequiredResponse>(JsonHelper.DefaultJsonSerializerOptions)).ConfigureAwait(false);
                         break;
                     case "Network.requestWillBeSent":
-                        await OnRequestWillBeSentAsync(client, e.MessageData.ToObject<RequestWillBeSentPayload>(true)).ConfigureAwait(false);
+                        await OnRequestWillBeSentAsync(client, e.MessageData.Deserialize<RequestWillBeSentPayload>(JsonHelper.DefaultJsonSerializerOptions)).ConfigureAwait(false);
                         break;
                     case "Network.requestServedFromCache":
-                        OnRequestServedFromCache(e.MessageData.ToObject<RequestServedFromCacheResponse>(true));
+                        OnRequestServedFromCache(e.MessageData.Deserialize<RequestServedFromCacheResponse>(JsonHelper.DefaultJsonSerializerOptions));
                         break;
                     case "Network.responseReceived":
-                        OnResponseReceived(client, e.MessageData.ToObject<ResponseReceivedResponse>(true));
+                        OnResponseReceived(client, e.MessageData.Deserialize<ResponseReceivedResponse>(JsonHelper.DefaultJsonSerializerOptions));
                         break;
                     case "Network.loadingFinished":
-                        OnLoadingFinished(e.MessageData.ToObject<LoadingFinishedEventResponse>(true));
+                        OnLoadingFinished(e.MessageData.Deserialize<LoadingFinishedEventResponse>(JsonHelper.DefaultJsonSerializerOptions));
                         break;
                     case "Network.loadingFailed":
-                        OnLoadingFailed(e.MessageData.ToObject<LoadingFailedEventResponse>(true));
+                        OnLoadingFailed(e.MessageData.Deserialize<LoadingFailedEventResponse>(JsonHelper.DefaultJsonSerializerOptions));
                         break;
                     case "Network.responseReceivedExtraInfo":
-                        await OnResponseReceivedExtraInfoAsync(sender as CDPSession, e.MessageData.ToObject<ResponseReceivedExtraInfoResponse>(true)).ConfigureAwait(false);
+                        await OnResponseReceivedExtraInfoAsync(sender as CDPSession, e.MessageData.Deserialize<ResponseReceivedExtraInfoResponse>(JsonHelper.DefaultJsonSerializerOptions)).ConfigureAwait(false);
                         break;
                 }
             }

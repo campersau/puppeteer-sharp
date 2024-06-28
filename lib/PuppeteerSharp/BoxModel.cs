@@ -5,10 +5,6 @@ namespace PuppeteerSharp
     /// </summary>
     public class BoxModel
     {
-        internal BoxModel()
-        {
-        }
-
         /// <summary>
         /// Gets the Content box.
         /// </summary>

@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using PuppeteerSharp.Nunit;
 
@@ -74,8 +73,9 @@ namespace PuppeteerSharp.Tests.ScreenshotTests
             var elementHandle = await Page.QuerySelectorAsync("div.to-screenshot");
             var screenshot = await elementHandle.ScreenshotDataAsync();
             Assert.True(ScreenshotHelper.PixelMatch("screenshot-element-larger-than-viewport.png", screenshot));
-            Assert.AreEqual(JToken.FromObject(new { w = 500, h = 500 }),
-                await Page.EvaluateExpressionAsync("({ w: window.innerWidth, h: window.innerHeight })"));
+            var result = await Page.EvaluateExpressionAsync("({ w: window.innerWidth, h: window.innerHeight })");
+            Assert.AreEqual(500, result.GetProperty("w").GetInt32());
+            Assert.AreEqual(500, result.GetProperty("h").GetInt32());
         }
 
         [Test, Retry(2), PuppeteerTest("screenshot.spec", "Screenshots ElementHandle.screenshot", "should scroll element into view")]

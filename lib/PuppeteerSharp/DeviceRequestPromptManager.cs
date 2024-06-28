@@ -24,6 +24,7 @@ using System;
 using System.Threading.Tasks;
 using PuppeteerSharp.Cdp.Messaging;
 using PuppeteerSharp.Helpers;
+using PuppeteerSharp.Helpers.Json;
 
 namespace PuppeteerSharp;
 
@@ -74,7 +75,7 @@ public class DeviceRequestPromptManager
             switch (e.MessageID)
             {
                 case "DeviceAccess.deviceRequestPrompted":
-                    OnDeviceRequestPrompted(e.MessageData.ToObject<DeviceAccessDeviceRequestPromptedResponse>());
+                    OnDeviceRequestPrompted(e.MessageData.Deserialize<DeviceAccessDeviceRequestPromptedResponse>(JsonHelper.DefaultJsonSerializerOptions));
                     break;
                 case "Target.detachedFromTarget":
                     _client = null;

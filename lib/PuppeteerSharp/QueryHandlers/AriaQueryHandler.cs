@@ -69,7 +69,7 @@ namespace PuppeteerSharp.QueryHandlers
                     return false;
                 }
 
-                return !_nonElementNodeRoles.Contains(node.Role.Value.ToObject<string>());
+                return !_nonElementNodeRoles.Contains(node.Role.Value.ToString());
             });
         }
 

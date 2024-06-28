@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using PuppeteerSharp.Cdp.Messaging;
 using PuppeteerSharp.Helpers;
+using PuppeteerSharp.Helpers.Json;
 
 namespace PuppeteerSharp;
 
@@ -142,7 +144,7 @@ public class DeviceRequestPrompt
                     // This is not upstream. But in upstream they have individual events.
                     if (!_handled)
                     {
-                        UpdateDevices(e.MessageData.ToObject<DeviceAccessDeviceRequestPromptedResponse>());
+                        UpdateDevices(e.MessageData.Deserialize<DeviceAccessDeviceRequestPromptedResponse>(JsonHelper.DefaultJsonSerializerOptions));
                     }
 
                     break;

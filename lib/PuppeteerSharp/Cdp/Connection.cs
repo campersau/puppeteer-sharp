@@ -2,11 +2,10 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using PuppeteerSharp.Cdp.Messaging;
 using PuppeteerSharp.Helpers;
 using PuppeteerSharp.Helpers.Json;
@@ -112,7 +111,7 @@ namespace PuppeteerSharp.Cdp
         }
 
         /// <inheritdoc/>
-        public async Task<JObject> SendAsync(string method, object args = null, bool waitForCallback = true, CommandOptions options = null)
+        public async Task<JsonElement> SendAsync(string method, object args = null, bool waitForCallback = true, CommandOptions options = null)
         {
             if (IsClosed)
             {
@@ -127,7 +126,7 @@ namespace PuppeteerSharp.Cdp
             {
                 callback = new MessageTask
                 {
-                    TaskWrapper = new TaskCompletionSource<JObject>(TaskCreationOptions.RunContinuationsAsynchronously),
+                    TaskWrapper = new TaskCompletionSource<JsonElement>(TaskCreationOptions.RunContinuationsAsynchronously),
                     Method = method,
                     Message = message,
                 };
@@ -135,14 +134,14 @@ namespace PuppeteerSharp.Cdp
             }
 
             await RawSendAsync(message, options).ConfigureAwait(false);
-            return waitForCallback ? await callback.TaskWrapper.Task.WithTimeout(ProtocolTimeout).ConfigureAwait(false) : null;
+            return waitForCallback ? await callback.TaskWrapper.Task.WithTimeout(ProtocolTimeout).ConfigureAwait(false) : default;
         }
 
         /// <inheritdoc/>
         public async Task<T> SendAsync<T>(string method, object args = null, CommandOptions options = null)
         {
             var response = await SendAsync(method, args, true, options).ConfigureAwait(false);
-            return response.ToObject<T>(true);
+            return response.Deserialize<T>(JsonHelper.DefaultJsonSerializerOptions);
         }
 
         internal static async Task<Connection> Create(string url, IConnectionOptions connectionOptions, ILoggerFactory loggerFactory = null, CancellationToken cancellationToken = default)
@@ -164,9 +163,9 @@ namespace PuppeteerSharp.Cdp
         }
 
         internal string GetMessage(int id, string method, object args, string sessionId = null)
-            => JsonConvert.SerializeObject(
+            => JsonSerializer.Serialize(
                 new ConnectionRequest { Id = id, Method = method, Params = args, SessionId = sessionId },
-                JsonHelper.DefaultJsonSerializerSettings);
+                JsonHelper.DefaultJsonSerializerOptions);
 
         internal bool IsAutoAttached(string targetId)
             => !_manuallyAttached.Contains(targetId);
@@ -273,7 +272,7 @@ namespace PuppeteerSharp.Cdp
 
                 try
                 {
-                    obj = JsonConvert.DeserializeObject<ConnectionResponse>(response, JsonHelper.DefaultJsonSerializerSettings);
+                    obj = JsonSerializer.Deserialize<ConnectionResponse>(response, JsonHelper.DefaultJsonSerializerOptions);
                 }
                 catch (JsonException exc)
                 {
@@ -295,7 +294,7 @@ namespace PuppeteerSharp.Cdp
         private void ProcessIncomingMessage(ConnectionResponse obj)
         {
             var method = obj.Method;
-            var param = obj.Params?.ToObject<ConnectionResponseParams>();
+            var param = obj.Params.Deserialize<ConnectionResponseParams>(JsonHelper.DefaultJsonSerializerOptions);
 
             if (method == "Target.attachedToTarget")
             {

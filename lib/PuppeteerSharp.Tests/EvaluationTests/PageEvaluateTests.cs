@@ -1,10 +1,8 @@
 using System.Collections.Generic;
 using System.Numerics;
+using System.Text.Json;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using NUnit.Framework;
-using PuppeteerSharp.Helpers.Json;
 using PuppeteerSharp.Nunit;
 
 namespace PuppeteerSharp.Tests.PageTests
@@ -317,15 +315,15 @@ namespace PuppeteerSharp.Tests.PageTests
             var result = await Page.EvaluateFunctionAsync<ComplexObjectTestClass>("() => { return { foo: 'bar' }}");
             Assert.AreEqual("bar", result.Foo);
 
-            result = (await Page.EvaluateFunctionAsync<JToken>("() => { return { Foo: 'bar' }}"))
-                .ToObject<ComplexObjectTestClass>(new JsonSerializerSettings());
+            result = (await Page.EvaluateFunctionAsync("() => { return { Foo: 'bar' }}"))
+                .Deserialize<ComplexObjectTestClass>(JsonSerializerOptions.Default);
             Assert.AreEqual("bar", result.Foo);
 
             result = await Page.EvaluateExpressionAsync<ComplexObjectTestClass>("var obj = { foo: 'bar' }; obj;");
             Assert.AreEqual("bar", result.Foo);
 
-            result = (await Page.EvaluateExpressionAsync<JToken>("var obj = { Foo: 'bar' }; obj;"))
-                .ToObject<ComplexObjectTestClass>(new JsonSerializerSettings());
+            result = (await Page.EvaluateExpressionAsync("var obj = { Foo: 'bar' }; obj;"))
+                .Deserialize<ComplexObjectTestClass>(JsonSerializerOptions.Default);
             Assert.AreEqual("bar", result.Foo);
         }
 
@@ -354,11 +352,14 @@ namespace PuppeteerSharp.Tests.PageTests
 
             var objectPopulated = await Page.EvaluateExpressionAsync("var obj = {a:1}; obj;");
             Assert.NotNull(objectPopulated);
-            Assert.AreEqual(1, objectPopulated["a"]);
+            Assert.AreEqual(1, objectPopulated.GetProperty("a").GetInt32());
 
             var arrayPopulated = await Page.EvaluateExpressionAsync("[1]");
-            Assert.IsInstanceOf<JArray>(arrayPopulated);
-            Assert.AreEqual(1, ((JArray)arrayPopulated)[0]);
+            Assert.AreEqual(JsonValueKind.Array, arrayPopulated.ValueKind);
+            foreach (var item in arrayPopulated.EnumerateArray())
+            {
+                Assert.AreEqual(1, item.GetInt32());
+            }
 
             Assert.AreEqual("1", await Page.EvaluateExpressionAsync("'1'"));
             Assert.AreEqual(1, await Page.EvaluateExpressionAsync("1"));

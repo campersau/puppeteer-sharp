@@ -128,23 +128,23 @@ namespace PuppeteerSharp.Cdp
                 switch (e.MessageID)
                 {
                     case "Target.attachedToTarget":
-                        _ = OnAttachedToTargetHandlingExceptionsAsync(sender, e.MessageID, e.MessageData.ToObject<TargetAttachedToTargetResponse>(true));
+                        _ = OnAttachedToTargetHandlingExceptionsAsync(sender, e.MessageID, e.MessageData.Deserialize<TargetAttachedToTargetResponse>(JsonHelper.DefaultJsonSerializerOptions));
                         return;
 
                     case "Target.detachedFromTarget":
-                        OnDetachedFromTarget(sender, e.MessageData.ToObject<TargetDetachedFromTargetResponse>(true));
+                        OnDetachedFromTarget(sender, e.MessageData.Deserialize<TargetDetachedFromTargetResponse>(JsonHelper.DefaultJsonSerializerOptions));
                         return;
 
                     case "Target.targetCreated":
-                        OnTargetCreated(e.MessageData.ToObject<TargetCreatedResponse>(true));
+                        OnTargetCreated(e.MessageData.Deserialize<TargetCreatedResponse>(JsonHelper.DefaultJsonSerializerOptions));
                         return;
 
                     case "Target.targetDestroyed":
-                        _ = OnTargetDestroyedAsync(e.MessageID, e.MessageData.ToObject<TargetDestroyedResponse>(true));
+                        _ = OnTargetDestroyedAsync(e.MessageID, e.MessageData.Deserialize<TargetDestroyedResponse>(JsonHelper.DefaultJsonSerializerOptions));
                         return;
 
                     case "Target.targetInfoChanged":
-                        OnTargetInfoChanged(e.MessageData.ToObject<TargetCreatedResponse>(true));
+                        OnTargetInfoChanged(e.MessageData.Deserialize<TargetCreatedResponse>(JsonHelper.DefaultJsonSerializerOptions));
                         return;
                 }
             }

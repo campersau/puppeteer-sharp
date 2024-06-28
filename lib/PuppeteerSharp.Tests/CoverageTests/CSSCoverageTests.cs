@@ -1,8 +1,7 @@
-using System;
 using System.Linq;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 using NUnit.Framework;
 using PuppeteerSharp.Nunit;
 using PuppeteerSharp.PageCoverage;
@@ -123,7 +122,7 @@ namespace PuppeteerSharp.Tests.CoverageTests
             var coverage = await Page.Coverage.StopCSSCoverageAsync();
             Assert.AreEqual(
                 TestUtils.CompressText(involved),
-                Regex.Replace(TestUtils.CompressText(JsonConvert.SerializeObject(coverage)), @":\d{4}\/", ":<PORT>/"));
+                Regex.Replace(TestUtils.CompressText(JsonSerializer.Serialize(coverage)), @":\d{4}\/", ":<PORT>/"));
         }
 
         [Test, Retry(2), PuppeteerTest("coverage.spec", "Coverage specs CSSCoverage", "should ignore injected stylesheets")]

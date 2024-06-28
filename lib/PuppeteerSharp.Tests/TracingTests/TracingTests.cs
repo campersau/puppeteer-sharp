@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.Json;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using PuppeteerSharp.Nunit;
 
@@ -77,11 +76,10 @@ namespace PuppeteerSharp.Tests.TracingTests
 
             await Page.Tracing.StopAsync();
 
-            using (var file = File.OpenText(_file))
-            using (var reader = new JsonTextReader(file))
+            using (var file = File.OpenRead(_file))
             {
-                var traceJson = JToken.ReadFrom(reader);
-                StringAssert.Contains("disabled-by-default-v8.cpu_profiler.hires", traceJson["metadata"]["trace-config"].ToString());
+                using var traceJson = JsonDocument.Parse(file);
+                StringAssert.Contains("disabled-by-default-v8.cpu_profiler.hires", traceJson.RootElement.GetProperty("metadata").GetProperty("trace-config").GetString());
             }
         }
 
@@ -95,11 +93,10 @@ namespace PuppeteerSharp.Tests.TracingTests
 
             await Page.Tracing.StopAsync();
 
-            using (var file = File.OpenText(_file))
-            using (var reader = new JsonTextReader(file))
+            using (var file = File.OpenRead(_file))
             {
-                var traceJson = JToken.ReadFrom(reader);
-                StringAssert.Contains("toplevel", traceJson["traceEvents"].ToString());
+                using var traceJson = JsonDocument.Parse(file);
+                StringAssert.Contains("toplevel", traceJson.RootElement.GetProperty("traceEvents").GetString());
             }
         }
 

@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using PuppeteerSharp.Cdp.Messaging;
 using PuppeteerSharp.Helpers;
+using PuppeteerSharp.Helpers.Json;
 
 namespace PuppeteerSharp
 {
@@ -97,7 +96,7 @@ namespace PuppeteerSharp
                 {
                     if (e.MessageID == "Tracing.tracingComplete")
                     {
-                        var stream = e.MessageData.ToObject<TracingCompleteResponse>().Stream;
+                        var stream = e.MessageData.Deserialize<TracingCompleteResponse>(JsonHelper.DefaultJsonSerializerOptions).Stream;
                         var tracingData = await ProtocolStreamReader.ReadProtocolStreamStringAsync(_client, stream, _path).ConfigureAwait(false);
 
                         _client.MessageReceived -= EventHandler;

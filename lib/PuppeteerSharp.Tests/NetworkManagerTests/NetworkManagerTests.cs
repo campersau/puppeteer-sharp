@@ -2,9 +2,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json.Linq;
 using NSubstitute;
 using NUnit.Framework;
 using PuppeteerSharp.Cdp;
@@ -31,7 +31,7 @@ public class NetworkManagerTests : PuppeteerPageBaseTest
             new MessageEventArgs()
             {
                 MessageID = "Network.requestWillBeSent",
-                MessageData = JToken.FromObject(new RequestWillBeSentPayload
+                MessageData = JsonSerializer.SerializeToElement(new RequestWillBeSentPayload
                 {
                     RequestId = "7760711DEFCFA23132D98ABA6B4E175C",
                     LoaderId = "7760711DEFCFA23132D98ABA6B4E175C",
@@ -48,7 +48,7 @@ public class NetworkManagerTests : PuppeteerPageBaseTest
             new MessageEventArgs()
             {
                 MessageID = "Network.requestWillBeSent",
-                MessageData = JToken.FromObject(new RequestWillBeSentPayload
+                MessageData = JsonSerializer.SerializeToElement(new RequestWillBeSentPayload
                 {
                     RequestId = "7760711DEFCFA23132D98ABA6B4E175C",
                     LoaderId = "7760711DEFCFA23132D98ABA6B4E175C",
@@ -75,7 +75,7 @@ public class NetworkManagerTests : PuppeteerPageBaseTest
             new MessageEventArgs()
             {
                 MessageID = "Network.requestWillBeSent",
-                MessageData = JToken.FromObject(new RequestWillBeSentPayload
+                MessageData = JsonSerializer.SerializeToElement(new RequestWillBeSentPayload
                 {
                     RequestId = "7760711DEFCFA23132D98ABA6B4E175C",
                     LoaderId = "7760711DEFCFA23132D98ABA6B4E175C",
@@ -122,7 +122,7 @@ public class NetworkManagerTests : PuppeteerPageBaseTest
             new MessageEventArgs()
             {
                 MessageID = "Network.requestWillBeSent",
-                MessageData = JToken.FromObject(new RequestWillBeSentPayload
+                MessageData = JsonSerializer.SerializeToElement(new RequestWillBeSentPayload
                 {
                     RequestId = "11ACE9783588040D644B905E8B55285B",
                     LoaderId = "11ACE9783588040D644B905E8B55285B",
@@ -144,7 +144,7 @@ public class NetworkManagerTests : PuppeteerPageBaseTest
             new MessageEventArgs()
             {
                 MessageID = "Fetch.requestPaused",
-                MessageData = JToken.FromObject(new FetchRequestPausedResponse
+                MessageData = JsonSerializer.SerializeToElement(new FetchRequestPausedResponse
                 {
                     RequestId = "interception-job-1.0",
                     Request = new Payload
@@ -164,7 +164,7 @@ public class NetworkManagerTests : PuppeteerPageBaseTest
             new MessageEventArgs()
             {
                 MessageID = "Fetch.requestPaused",
-                MessageData = JToken.FromObject(new FetchRequestPausedResponse
+                MessageData = JsonSerializer.SerializeToElement(new FetchRequestPausedResponse
                 {
                     RequestId = "interception-job-2.0",
                     Request = new Payload()
@@ -205,7 +205,7 @@ public class NetworkManagerTests : PuppeteerPageBaseTest
             new MessageEventArgs()
             {
                 MessageID = "Network.requestWillBeSent",
-                MessageData = JToken.FromObject(new RequestWillBeSentPayload
+                MessageData = JsonSerializer.SerializeToElement(new RequestWillBeSentPayload
                 {
                     RequestId = "1360.2",
                     LoaderId = "9E86B0282CC98B77FB0ABD49156DDFDD",
@@ -228,7 +228,7 @@ public class NetworkManagerTests : PuppeteerPageBaseTest
             new MessageEventArgs()
             {
                 MessageID = "Network.responseReceived",
-                MessageData = JToken.FromObject(new ResponseReceivedResponse
+                MessageData = JsonSerializer.SerializeToElement(new ResponseReceivedResponse
                 {
                     RequestId = "1360.2",
                     Response = new ResponsePayload()
@@ -254,7 +254,7 @@ public class NetworkManagerTests : PuppeteerPageBaseTest
             new MessageEventArgs()
             {
                 MessageID = "Network.responseReceivedExtraInfo",
-                MessageData = JToken.FromObject(new ResponseReceivedExtraInfoResponse
+                MessageData = JsonSerializer.SerializeToElement(new ResponseReceivedExtraInfoResponse
                 {
                     RequestId = "1360.2",
                     Headers = new Dictionary<string, string>
@@ -271,7 +271,7 @@ public class NetworkManagerTests : PuppeteerPageBaseTest
             new MessageEventArgs()
             {
                 MessageID = "Network.loadingFinished",
-                MessageData = JToken.FromObject(new LoadingFinishedEventResponse { RequestId = "1360.2", })
+                MessageData = JsonSerializer.SerializeToElement(new LoadingFinishedEventResponse { RequestId = "1360.2", })
             });
 
         Assert.AreEqual(1, requests.Count);
@@ -299,7 +299,7 @@ public class NetworkManagerTests : PuppeteerPageBaseTest
             new MessageEventArgs()
             {
                 MessageID = "Network.requestWillBeSent",
-                MessageData = JToken.FromObject(new RequestWillBeSentPayload()
+                MessageData = JsonSerializer.SerializeToElement(new RequestWillBeSentPayload()
                 {
                     RequestId = "LOADERID",
                     LoaderId = "LOADERID",
@@ -327,7 +327,7 @@ public class NetworkManagerTests : PuppeteerPageBaseTest
             new MessageEventArgs()
             {
                 MessageID = "Network.responseReceived",
-                MessageData = JToken.FromObject(new ResponseReceivedResponse
+                MessageData = JsonSerializer.SerializeToElement(new ResponseReceivedResponse
                 {
                     RequestId = "LOADERID",
                     Response = new ResponsePayload()
@@ -358,7 +358,7 @@ public class NetworkManagerTests : PuppeteerPageBaseTest
             new MessageEventArgs()
             {
                 MessageID = "Network.loadingFinished",
-                MessageData = JToken.FromObject(new LoadingFinishedEventResponse() { RequestId = "LOADERID", })
+                MessageData = JsonSerializer.SerializeToElement(new LoadingFinishedEventResponse() { RequestId = "LOADERID", })
             });
 
         Assert.AreEqual(1, pendingRequests.Count);
@@ -370,7 +370,7 @@ public class NetworkManagerTests : PuppeteerPageBaseTest
             new MessageEventArgs()
             {
                 MessageID = "Network.responseReceivedExtraInfo",
-                MessageData = JToken.FromObject(new ResponseReceivedExtraInfoResponse
+                MessageData = JsonSerializer.SerializeToElement(new ResponseReceivedExtraInfoResponse
                 {
                     RequestId = "LOADERID",
                     Headers = new Dictionary<string, string>
@@ -409,7 +409,7 @@ public class NetworkManagerTests : PuppeteerPageBaseTest
             new MessageEventArgs()
             {
                 MessageID = "Network.requestWillBeSent",
-                MessageData = JToken.FromObject(new RequestWillBeSentPayload
+                MessageData = JsonSerializer.SerializeToElement(new RequestWillBeSentPayload
                 {
                     RequestId = "94051D839ACF29E53A3D1273FB20B4C4",
                     LoaderId = "94051D839ACF29E53A3D1273FB20B4C4",
@@ -431,7 +431,7 @@ public class NetworkManagerTests : PuppeteerPageBaseTest
             new MessageEventArgs()
             {
                 MessageID = "Network.responseReceivedExtraInfo",
-                MessageData = JToken.FromObject(new ResponseReceivedExtraInfoResponse
+                MessageData = JsonSerializer.SerializeToElement(new ResponseReceivedExtraInfoResponse
                 {
                     RequestId = "94051D839ACF29E53A3D1273FB20B4C4",
                     Headers = new Dictionary<string, string>
@@ -448,7 +448,7 @@ public class NetworkManagerTests : PuppeteerPageBaseTest
             new MessageEventArgs()
             {
                 MessageID = "Network.responseReceived",
-                MessageData = JToken.FromObject(new ResponseReceivedResponse
+                MessageData = JsonSerializer.SerializeToElement(new ResponseReceivedResponse
                 {
                     RequestId = "94051D839ACF29E53A3D1273FB20B4C4",
                     Response = new ResponsePayload()
@@ -496,7 +496,7 @@ public class NetworkManagerTests : PuppeteerPageBaseTest
             new MessageEventArgs()
             {
                 MessageID = "Network.requestWillBeSent",
-                MessageData = JToken.FromObject(new RequestWillBeSentPayload
+                MessageData = JsonSerializer.SerializeToElement(new RequestWillBeSentPayload
                 {
                     RequestId = "E18BEB94B486CA8771F9AFA2030FEA37",
                     LoaderId = "E18BEB94B486CA8771F9AFA2030FEA37",
@@ -518,7 +518,7 @@ public class NetworkManagerTests : PuppeteerPageBaseTest
             new MessageEventArgs()
             {
                 MessageID = "Network.responseReceived",
-                MessageData = JToken.FromObject(new ResponseReceivedResponse
+                MessageData = JsonSerializer.SerializeToElement(new ResponseReceivedResponse
                 {
                     RequestId = "E18BEB94B486CA8771F9AFA2030FEA37",
                     Response = new ResponsePayload()
@@ -545,7 +545,7 @@ public class NetworkManagerTests : PuppeteerPageBaseTest
             {
                 MessageID = "Network.loadingFinished",
                 MessageData =
-                    JToken.FromObject(new LoadingFinishedEventResponse()
+                    JsonSerializer.SerializeToElement(new LoadingFinishedEventResponse()
                     {
                         RequestId = "E18BEB94B486CA8771F9AFA2030FEA37",
                     })
@@ -556,7 +556,7 @@ public class NetworkManagerTests : PuppeteerPageBaseTest
             new MessageEventArgs()
             {
                 MessageID = "Network.responseReceivedExtraInfo",
-                MessageData = JToken.FromObject(new ResponseReceivedExtraInfoResponse
+                MessageData = JsonSerializer.SerializeToElement(new ResponseReceivedExtraInfoResponse
                 {
                     RequestId = "E18BEB94B486CA8771F9AFA2030FEA37",
                     Headers = new Dictionary<string, string>
@@ -591,7 +591,7 @@ public class NetworkManagerTests : PuppeteerPageBaseTest
             new MessageEventArgs()
             {
                 MessageID = "Network.requestWillBeSent",
-                MessageData = JToken.FromObject(new RequestWillBeSentPayload()
+                MessageData = JsonSerializer.SerializeToElement(new RequestWillBeSentPayload()
                 {
                     RequestId = "6D76C8ACAECE880C722FA515AD380015",
                     LoaderId = "6D76C8ACAECE880C722FA515AD380015",
@@ -619,7 +619,7 @@ public class NetworkManagerTests : PuppeteerPageBaseTest
             new MessageEventArgs()
             {
                 MessageID = "Network.responseReceivedExtraInfo",
-                MessageData = JToken.FromObject(new ResponseReceivedExtraInfoResponse
+                MessageData = JsonSerializer.SerializeToElement(new ResponseReceivedExtraInfoResponse
                 {
                     RequestId = "6D76C8ACAECE880C722FA515AD380015",
                     Headers = new Dictionary<string, string>
@@ -636,7 +636,7 @@ public class NetworkManagerTests : PuppeteerPageBaseTest
             new MessageEventArgs()
             {
                 MessageID = "Network.responseReceived",
-                MessageData = JToken.FromObject(new ResponseReceivedResponse
+                MessageData = JsonSerializer.SerializeToElement(new ResponseReceivedResponse
                 {
                     RequestId = "6D76C8ACAECE880C722FA515AD380015",
                     Response = new ResponsePayload()
@@ -668,7 +668,7 @@ public class NetworkManagerTests : PuppeteerPageBaseTest
             {
                 MessageID = "Network.loadingFinished",
                 MessageData =
-                    JToken.FromObject(new LoadingFinishedEventResponse()
+                    JsonSerializer.SerializeToElement(new LoadingFinishedEventResponse()
                     {
                         RequestId = "6D76C8ACAECE880C722FA515AD380015",
                     })
@@ -679,7 +679,7 @@ public class NetworkManagerTests : PuppeteerPageBaseTest
             new MessageEventArgs()
             {
                 MessageID = "Network.requestWillBeSent",
-                MessageData = JToken.FromObject(new RequestWillBeSentPayload()
+                MessageData = JsonSerializer.SerializeToElement(new RequestWillBeSentPayload()
                 {
                     RequestId = "4C2CC44FB6A6CAC5BE2780BCC9313105",
                     LoaderId = "4C2CC44FB6A6CAC5BE2780BCC9313105",
@@ -707,7 +707,7 @@ public class NetworkManagerTests : PuppeteerPageBaseTest
             new MessageEventArgs()
             {
                 MessageID = "Network.responseReceivedExtraInfo",
-                MessageData = JToken.FromObject(new ResponseReceivedExtraInfoResponse
+                MessageData = JsonSerializer.SerializeToElement(new ResponseReceivedExtraInfoResponse
                 {
                     RequestId = "4C2CC44FB6A6CAC5BE2780BCC9313105",
                     Headers = new Dictionary<string, string>
@@ -724,7 +724,7 @@ public class NetworkManagerTests : PuppeteerPageBaseTest
             new MessageEventArgs()
             {
                 MessageID = "Network.requestWillBeSent",
-                MessageData = JToken.FromObject(new RequestWillBeSentPayload()
+                MessageData = JsonSerializer.SerializeToElement(new RequestWillBeSentPayload()
                 {
                     RequestId = "4C2CC44FB6A6CAC5BE2780BCC9313105",
                     LoaderId = "4C2CC44FB6A6CAC5BE2780BCC9313105",
@@ -758,7 +758,7 @@ public class NetworkManagerTests : PuppeteerPageBaseTest
             new MessageEventArgs()
             {
                 MessageID = "Network.responseReceived",
-                MessageData = JToken.FromObject(new ResponseReceivedResponse
+                MessageData = JsonSerializer.SerializeToElement(new ResponseReceivedResponse
                 {
                     RequestId = "4C2CC44FB6A6CAC5BE2780BCC9313105",
                     Response = new ResponsePayload()
@@ -789,7 +789,7 @@ public class NetworkManagerTests : PuppeteerPageBaseTest
             new MessageEventArgs()
             {
                 MessageID = "Network.responseReceivedExtraInfo",
-                MessageData = JToken.FromObject(new ResponseReceivedExtraInfoResponse
+                MessageData = JsonSerializer.SerializeToElement(new ResponseReceivedExtraInfoResponse
                 {
                     RequestId = "4C2CC44FB6A6CAC5BE2780BCC9313105",
                     Headers = new Dictionary<string, string>
@@ -807,7 +807,7 @@ public class NetworkManagerTests : PuppeteerPageBaseTest
             {
                 MessageID = "Network.loadingFinished",
                 MessageData =
-                    JToken.FromObject(new LoadingFinishedEventResponse()
+                    JsonSerializer.SerializeToElement(new LoadingFinishedEventResponse()
                     {
                         RequestId = "4C2CC44FB6A6CAC5BE2780BCC9313105",
                     })

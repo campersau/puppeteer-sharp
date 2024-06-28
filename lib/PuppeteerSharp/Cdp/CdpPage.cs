@@ -960,31 +960,31 @@ public class CdpPage : Page
                     OnLoad();
                     break;
                 case "Runtime.consoleAPICalled":
-                    await OnConsoleAPIAsync(e.MessageData.ToObject<PageConsoleResponse>(true))
+                    await OnConsoleAPIAsync(e.MessageData.Deserialize<PageConsoleResponse>(JsonHelper.DefaultJsonSerializerOptions))
                         .ConfigureAwait(false);
                     break;
                 case "Page.javascriptDialogOpening":
-                    OnDialog(e.MessageData.ToObject<PageJavascriptDialogOpeningResponse>(true));
+                    OnDialog(e.MessageData.Deserialize<PageJavascriptDialogOpeningResponse>(JsonHelper.DefaultJsonSerializerOptions));
                     break;
                 case "Runtime.exceptionThrown":
-                    HandleException(e.MessageData.ToObject<RuntimeExceptionThrownResponse>(true).ExceptionDetails);
+                    HandleException(e.MessageData.Deserialize<RuntimeExceptionThrownResponse>(JsonHelper.DefaultJsonSerializerOptions).ExceptionDetails);
                     break;
                 case "Inspector.targetCrashed":
                     OnTargetCrashed();
                     break;
                 case "Performance.metrics":
-                    EmitMetrics(e.MessageData.ToObject<PerformanceMetricsResponse>(true));
+                    EmitMetrics(e.MessageData.Deserialize<PerformanceMetricsResponse>(JsonHelper.DefaultJsonSerializerOptions));
                     break;
                 case "Log.entryAdded":
-                    await OnLogEntryAddedAsync(e.MessageData.ToObject<LogEntryAddedResponse>(true))
+                    await OnLogEntryAddedAsync(e.MessageData.Deserialize<LogEntryAddedResponse>(JsonHelper.DefaultJsonSerializerOptions))
                         .ConfigureAwait(false);
                     break;
                 case "Runtime.bindingCalled":
-                    await OnBindingCalledAsync(e.MessageData.ToObject<BindingCalledResponse>(true))
+                    await OnBindingCalledAsync(e.MessageData.Deserialize<BindingCalledResponse>(JsonHelper.DefaultJsonSerializerOptions))
                         .ConfigureAwait(false);
                     break;
                 case "Page.fileChooserOpened":
-                    await OnFileChooserAsync(e.MessageData.ToObject<PageFileChooserOpenedResponse>(true))
+                    await OnFileChooserAsync(e.MessageData.Deserialize<PageFileChooserOpenedResponse>(JsonHelper.DefaultJsonSerializerOptions))
                         .ConfigureAwait(false);
                     break;
             }
@@ -1078,7 +1078,7 @@ public class CdpPage : Page
         var tokens = values.Select(i =>
             i.RemoteObject.ObjectId != null || i.RemoteObject.Type == RemoteObjectType.Object
                 ? i.ToString()
-                : RemoteObjectHelper.ValueFromRemoteObject<string>(i.RemoteObject));
+                : RemoteObjectHelper.ValueFromRemoteObject<object>(i.RemoteObject)?.ToString());
 
         var location = new ConsoleMessageLocation();
         if (stackTrace?.CallFrames?.Length > 0)

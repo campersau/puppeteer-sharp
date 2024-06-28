@@ -2,9 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
 using PuppeteerSharp.Cdp;
 using PuppeteerSharp.Cdp.Messaging;
 using PuppeteerSharp.Helpers;
@@ -622,16 +621,16 @@ namespace PuppeteerSharp
             => MainFrame.TypeAsync(selector, text, options);
 
         /// <inheritdoc/>
-        public Task<JToken> EvaluateExpressionAsync(string script)
-            => MainFrame.EvaluateExpressionAsync<JToken>(script);
+        public Task<JsonElement> EvaluateExpressionAsync(string script)
+            => MainFrame.EvaluateExpressionAsync(script);
 
         /// <inheritdoc/>
         public Task<T> EvaluateExpressionAsync<T>(string script)
             => MainFrame.EvaluateExpressionAsync<T>(script);
 
         /// <inheritdoc/>
-        public Task<JToken> EvaluateFunctionAsync(string script, params object[] args)
-            => MainFrame.EvaluateFunctionAsync<JToken>(script, args);
+        public Task<JsonElement> EvaluateFunctionAsync(string script, params object[] args)
+            => MainFrame.EvaluateFunctionAsync(script, args);
 
         /// <inheritdoc/>
         public Task<T> EvaluateFunctionAsync<T>(string script, params object[] args)

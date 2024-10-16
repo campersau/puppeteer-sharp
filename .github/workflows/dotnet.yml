@@ -76,6 +76,7 @@ jobs:
         dotnet dev-certs https -ep lib/PuppeteerSharp.TestServer/testCert.cer
         sudo openssl x509 -inform der -in lib/PuppeteerSharp.TestServer/testCert.cer -out /usr/local/share/ca-certificates/testCert.crt -outform pem
         sudo update-ca-certificates
+        echo 0 | sudo tee /proc/sys/kernel/apparmor_restrict_unprivileged_userns
     - name: Install dependencies (Windows)
       if: matrix.os == 'windows-latest'
       run: |

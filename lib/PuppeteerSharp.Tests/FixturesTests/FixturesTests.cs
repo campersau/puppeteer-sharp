@@ -1,3 +1,4 @@
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -22,6 +23,8 @@ namespace PuppeteerSharp.Tests.FixturesTests
 
             process.ErrorDataReceived += (_, e) =>
             {
+                Console.WriteLine(e.Data);
+
                 success |= e.Data != null && e.Data.Contains("DevTools listening on ws://");
             };
 
